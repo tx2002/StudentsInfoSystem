@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.100.33.168/:3306/entrysystem?characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+logging:
+  file:
+    path: /var/log/tomcat
