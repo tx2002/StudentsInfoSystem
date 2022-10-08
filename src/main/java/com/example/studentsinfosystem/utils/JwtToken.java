@@ -14,7 +14,7 @@ import java.util.Date;
 public class JwtToken {
 
     private long time = 1000*60*60*2;//两小时过期
-    private String signature = "saccnb";//设置密钥
+    private String signature = "txtx";//设置密钥
 
     public String jwt(Account accout){
         //Token组成三部分,header,payload,signature

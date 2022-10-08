@@ -19,5 +19,6 @@ public class Account {
     private Integer id;
     private String username;
     private String password;
+    // 1为老师，2为学生
     private Integer role;
 }

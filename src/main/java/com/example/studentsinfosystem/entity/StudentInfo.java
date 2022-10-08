@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class StudentInfo {
     @TableId(type= IdType.AUTO)
     private Integer id;
-    private String name;
+    private String studentName;
     private String studentId;
     private String className;
 }

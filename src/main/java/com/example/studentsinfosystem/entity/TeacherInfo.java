@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TeacherInfo {
     private String teacherId;
-    private String name;
+    private String teacherName;
 }

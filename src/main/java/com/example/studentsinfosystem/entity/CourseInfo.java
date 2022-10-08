@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class CourseInfo {
     @TableId(type= IdType.AUTO)
     private Integer id;
-    private String name;
+    private String courseName;
     private String teacher;
     private String teacherId;
     private String point;
