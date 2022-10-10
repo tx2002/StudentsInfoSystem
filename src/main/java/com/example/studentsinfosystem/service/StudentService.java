@@ -25,4 +25,10 @@ public interface StudentService {
     String getClassNameById(String studentId);
 
     List<ChooseCourse> chooseCourseList(String className, Integer term);
+
+    String getTeacherIdByName(String teacher);
+
+    Integer insert(CourseInfo newCourse);
+
+    int deleteCourse(String studentId, String courseName);
 }

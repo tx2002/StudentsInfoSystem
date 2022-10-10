@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class ChooseCourse {
     private String className;
     private Integer term;
-    private Integer point;
+    private String point;
     private String courseName;
     private String teacher;
 }
