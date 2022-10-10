@@ -2,6 +2,7 @@ package com.example.studentsinfosystem.controller;
 
 import com.example.studentsinfosystem.api.CommonResult;
 import com.example.studentsinfosystem.entity.CourseInfo;
+import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.service.StudentService;
 import com.example.studentsinfosystem.utils.JwtToken;
@@ -58,6 +59,23 @@ public class StudentController {
                 return CommonResult.success(list);
             } else {
                 return CommonResult.failed("无课程信息");
+            }
+        } else {
+            return CommonResult.failed("无权限");
+        }
+    }
+
+    @PostMapping("/report")
+    public CommonResult report(@RequestParam Integer term, @RequestHeader String token) {
+        Claims claims = jwtToken.getClaimByToken(token);
+        // 权限判断
+        if(claims.get("role").equals(2)){
+            String studentId = (String) claims.get("username");
+            List<Score> list = studentService.report(studentId, term);
+            if (!list.isEmpty()) {
+                return CommonResult.success(list);
+            } else {
+                return CommonResult.failed("无成绩信息");
             }
         } else {
             return CommonResult.failed("无权限");

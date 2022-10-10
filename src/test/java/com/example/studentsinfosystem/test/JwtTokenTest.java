@@ -14,7 +14,7 @@ public class JwtTokenTest {
 
     public static void main(String[] args) {
         JwtToken jwtToken = new JwtToken();
-        Account account = new Account(1, "B20030530", "123456", 1);
+        Account account = new Account(1, "B20030530", "123456", 2);
         String token = jwtToken.jwt(account);
         System.out.println(token);
 

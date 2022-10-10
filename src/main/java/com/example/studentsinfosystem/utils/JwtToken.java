@@ -13,7 +13,7 @@ import java.util.Date;
 @Configuration
 public class JwtToken {
 
-    private long time = 1000*60*60*2;//两小时过期
+    private long time = 1000*60*60*48;//两天过期
     private String signature = "txtx";//设置密钥
 
     public String jwt(Account accout){

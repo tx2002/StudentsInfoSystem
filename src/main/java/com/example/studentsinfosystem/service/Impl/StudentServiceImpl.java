@@ -2,8 +2,10 @@ package com.example.studentsinfosystem.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.studentsinfosystem.entity.CourseInfo;
+import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.mapper.CourseInfoMapper;
+import com.example.studentsinfosystem.mapper.ScoreMapper;
 import com.example.studentsinfosystem.mapper.StudentInfoMapper;
 import com.example.studentsinfosystem.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- *
  * @author TX
  * @date 2022/10/8 9:09
  */
@@ -22,6 +23,8 @@ public class StudentServiceImpl implements StudentService {
     StudentInfoMapper studentInfoMapper;
     @Autowired
     CourseInfoMapper courseInfoMapper;
+    @Autowired
+    ScoreMapper scoreMapper;
 
     @Override
     public StudentInfo getinfo(String studentId) {
@@ -36,6 +39,15 @@ public class StudentServiceImpl implements StudentService {
         QueryWrapper<CourseInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("student_id", studentId);
         List<CourseInfo> list = courseInfoMapper.selectList(wrapper);
+        return list;
+    }
+
+    @Override
+    public List<Score> report(String studentId, Integer term) {
+        QueryWrapper<Score> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId)
+                .eq("term", term);
+        List<Score> list = scoreMapper.selectList(wrapper);
         return list;
     }
 }
