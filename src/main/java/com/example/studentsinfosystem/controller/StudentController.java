@@ -157,7 +157,11 @@ public class StudentController {
             newCourse.setTeacherId(studentService.getTeacherIdByName(addCourse.getTeacher()));
             newCourse.setTerm(addCourse.getTerm());
             int insert = studentService.insert(newCourse);
-            return CommonResult.success(insert);
+            if (insert == 1) {
+                return CommonResult.success("选课成功！");
+            } else {
+                return CommonResult.failed("选课失败!");
+            }
         } else {
             return CommonResult.failed("无权限");
         }
@@ -176,7 +180,11 @@ public class StudentController {
         if(claims.get("role").equals(2)){
             String studentId = (String) claims.get("username");
             int delete = studentService.deleteCourse(studentId, courseName);
-            return CommonResult.success(delete);
+            if (delete == 1) {
+                return CommonResult.success("退选成功！");
+            } else {
+                return CommonResult.failed("退选失败!");
+            }
         } else {
             return CommonResult.failed("无权限");
         }
