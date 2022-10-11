@@ -17,7 +17,9 @@ import lombok.NoArgsConstructor;
 public class Account {
     @TableId(type= IdType.AUTO)
     private Integer id;
+    // 用户名
     private String username;
+    // 密码
     private String password;
     // 1为老师，2为学生
     private Integer role;

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
+ * 学生功能相关的接口
  * @author TX
  * @date 2022/10/8 8:55
  */
@@ -51,6 +51,11 @@ public class StudentController {
         }
     }
 
+    /**
+     * 学生查询自己的全部课程
+     * @param token
+     * @return
+     */
     @GetMapping("/getCourse")
     public CommonResult getCourse(@RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
@@ -68,6 +73,12 @@ public class StudentController {
         }
     }
 
+    /**
+     * 学生查询成绩单
+     * @param term 学期数
+     * @param token
+     * @return
+     */
     @PostMapping("/report")
     public CommonResult report(@RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
@@ -87,7 +98,7 @@ public class StudentController {
 
     /**
      * 查询学生可选课的列表
-     * @param term
+     * @param term 学期数
      * @param token
      * @return
      */

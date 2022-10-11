@@ -13,9 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Score {
+    // 学生学号
     private String studentId;
+    // 学生姓名
     private String studentName;
+    // 课程名称
     private String courseName;
+    // 开课学期
     private Integer term;
+    // 课程成绩
     private Integer score;
 }

@@ -17,10 +17,16 @@ import lombok.NoArgsConstructor;
 public class CourseInfo {
     @TableId(type= IdType.AUTO)
     private Integer id;
+    // 课程名称
     private String courseName;
+    // 老师姓名
     private String teacher;
+    // 老师工号
     private String teacherId;
+    // 学分
     private String point;
+    // 学生学号
     private String studentId;
+    // 开课学期
     private Integer term;
 }

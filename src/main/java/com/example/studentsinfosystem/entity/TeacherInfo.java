@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherInfo {
+    // 老师工号
     private String teacherId;
+    // 老师姓名
     private String teacherName;
 }
