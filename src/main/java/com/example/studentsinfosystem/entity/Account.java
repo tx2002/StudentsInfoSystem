@@ -21,5 +21,6 @@ public class Account {
     private String username;
     // 密码
     private String password;
-    private Integer role;// 1为老师，2为学生，3为管理员
+    // 1为老师，2为学生
+    private Integer role;
 }
