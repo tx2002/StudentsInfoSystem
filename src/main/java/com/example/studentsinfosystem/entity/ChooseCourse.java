@@ -13,9 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChooseCourse {
+    // 开课班级名称
     private String className;
+    // 开课学期
     private Integer term;
-    private Integer point;
+    // 学分
+    private String point;
+    // 课程名称
     private String courseName;
+    // 老师姓名
     private String teacher;
 }

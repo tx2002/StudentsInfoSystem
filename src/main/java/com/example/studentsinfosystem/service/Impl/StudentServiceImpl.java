@@ -1,14 +1,8 @@
 package com.example.studentsinfosystem.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.studentsinfosystem.entity.ChooseCourse;
-import com.example.studentsinfosystem.entity.CourseInfo;
-import com.example.studentsinfosystem.entity.Score;
-import com.example.studentsinfosystem.entity.StudentInfo;
-import com.example.studentsinfosystem.mapper.ChooseCourseMapper;
-import com.example.studentsinfosystem.mapper.CourseInfoMapper;
-import com.example.studentsinfosystem.mapper.ScoreMapper;
-import com.example.studentsinfosystem.mapper.StudentInfoMapper;
+import com.example.studentsinfosystem.entity.*;
+import com.example.studentsinfosystem.mapper.*;
 import com.example.studentsinfosystem.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +23,8 @@ public class StudentServiceImpl implements StudentService {
     ScoreMapper scoreMapper;
     @Autowired
     ChooseCourseMapper chooseCourseMapper;
+    @Autowired
+    TeacherInfoMapper teacherInfoMapper;
 
     @Override
     public StudentInfo getinfo(String studentId) {
@@ -86,5 +82,28 @@ public class StudentServiceImpl implements StudentService {
                 .eq("term", term);
         List<ChooseCourse> courses = chooseCourseMapper.selectList(wrapper);
         return courses;
+    }
+
+    @Override
+    public String getTeacherIdByName(String teacher) {
+        QueryWrapper<TeacherInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("teacher_name", teacher);
+        String teacherId = teacherInfoMapper.selectOne(wrapper).getTeacherId();
+        return teacherId;
+    }
+
+    @Override
+    public Integer insert(CourseInfo newCourse) {
+        int insert = courseInfoMapper.insert(newCourse);
+        return insert;
+    }
+
+    @Override
+    public int deleteCourse(String studentId, String courseName) {
+        QueryWrapper<CourseInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId)
+                        .eq("course_name", courseName);
+        int delete = courseInfoMapper.delete(wrapper);
+        return delete;
     }
 }

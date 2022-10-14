@@ -17,7 +17,10 @@ import lombok.NoArgsConstructor;
 public class StudentInfo {
     @TableId(type= IdType.AUTO)
     private Integer id;
+    // 学生姓名
     private String studentName;
+    // 学生学号
     private String studentId;
+    // 学生班级
     private String className;
 }

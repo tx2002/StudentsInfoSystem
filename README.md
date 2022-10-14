@@ -1,4 +1,1 @@
-# 工程简介
-
-# 延伸阅读
-
+Team project of course Mobile-Terminal-Development-Technology in NJUPT
