@@ -4,8 +4,12 @@ import com.example.studentsinfosystem.api.CommonResult;
 import com.example.studentsinfosystem.entity.Account;
 import com.example.studentsinfosystem.service.CommonService;
 import com.example.studentsinfosystem.utils.JwtToken;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 梁鑫宇
@@ -26,8 +30,15 @@ public class CommonController {
             return CommonResult.failed("用户不存在");
         if(result.equals("1"))
             return  CommonResult.failed("密码错误");
-        else
-            return CommonResult.success(result);
+        else {
+            Claims claimByToken = jwtToken.getClaimByToken(result);
+            String role = claimByToken.get("role").toString();
+            Map<String, String> map = new HashMap<>();
+            map.put("token", result);
+            map.put("role", role);
+            return CommonResult.success(map);
+        }
+
     }
 
 
