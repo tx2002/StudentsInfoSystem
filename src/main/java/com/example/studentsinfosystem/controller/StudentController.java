@@ -79,7 +79,7 @@ public class StudentController {
      * @param token
      * @return
      */
-    @PostMapping("/report")
+    @GetMapping("/report")
     public CommonResult report(@RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
@@ -102,7 +102,7 @@ public class StudentController {
      * @param token
      * @return
      */
-    @PostMapping("/chooseCourseList")
+    @GetMapping("/chooseCourseList")
     public CommonResult chooseCourseList(@RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
