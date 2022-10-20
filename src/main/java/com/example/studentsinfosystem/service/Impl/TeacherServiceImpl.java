@@ -25,43 +25,85 @@ public class TeacherServiceImpl implements TeacherService {
     ScoreMapper scoreMapper;
     @Autowired
     CourseInfoMapper courseInfoMapper;
+
+    /**
+     * 查询学生信息
+     * @param studentId
+     * @return studentInfo
+     */
     @Override
     public StudentInfo getStudentinfo(String studentId) {
         QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("student_id", studentId);
-        StudentInfo studentInfo = studentInfoMapper.selectOne(wrapper);
+        return studentInfoMapper.selectOne(wrapper);
+    }
+
+    /**
+     * 修改学生信息
+     * 仅老师、管理员可以操作
+     * 如果成功，返回修改后的学生信息
+     * @param studentInfo
+     * @return StudentInfo
+     */
+    @Override
+    public StudentInfo changeStudentinfo(StudentInfo studentInfo) {
+        QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentInfo.getStudentId());
+        studentInfoMapper.update(studentInfo,wrapper);
         return studentInfo;
     }
 
-
+    /**
+     * 新增一个学生信息
+     * @param studentInfo
+     * @return String
+     */
     @Override
-    public StudentInfo changeStudentinfo(String token, StudentInfo studentInfo) {
-        return null;
+    public String inputStudent(StudentInfo studentInfo) {
+        teacherInfoMapper.insert(studentInfo);
+        return "1";
     }
 
+    /**
+     * 删除一个学生信息
+     * @param studentInfo
+     * @return String
+     */
     @Override
-    public String inputStudent(String token, StudentInfo studentInfo) {
-        return null;
+    public String deleteStudent(StudentInfo studentInfo) {
+        QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentInfo.getStudentId());
+        teacherInfoMapper.delete(wrapper);
+        return "删除成功";
     }
 
-        @Override
-        public String deleteStudent(String token, StudentInfo studentInfo) {
-            return null;
-        }
-
+    /**
+     * 查询班级信息
+     * @param token
+     * @param courseName
+     * @return List<StudentInfo>
+     */
     @Override
     public List<StudentInfo> getAllStudentInfo(String token, String courseName) {
         return null;
     }
+
 
     @Override
     public List<Score> getAllStudentScore(String token, String studentId) {
         return null;
     }
 
+    /**
+     * 查询老师自己的课程信息
+     * @param token
+     * @param username
+     * @return List<CourseInfo>
+     */
     @Override
     public List<CourseInfo> getAllCourseInfo(String token, String username) {
         return null;
     }
 
 }
+

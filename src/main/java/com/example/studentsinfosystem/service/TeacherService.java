@@ -14,11 +14,11 @@ import java.util.List;
 public interface TeacherService {
     StudentInfo getStudentinfo(String studentId);
 
-    StudentInfo changeStudentinfo(String token, StudentInfo studentInfo);
+    StudentInfo changeStudentinfo(StudentInfo studentInfo);
 
-    String  inputStudent(String token, StudentInfo studentInfo);
+    String  inputStudent(StudentInfo studentInfo);
 
-    String deleteStudent(String token, StudentInfo studentInfo);
+    String deleteStudent(StudentInfo studentInfo);
 
     List<StudentInfo> getAllStudentInfo(String token, String courseName);
 

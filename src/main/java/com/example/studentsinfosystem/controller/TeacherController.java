@@ -21,6 +21,11 @@ public class TeacherController {
     @Autowired
     TeacherService teacherService;
 
+    /**
+     * 显示学生信息
+     * @param token
+     * @return StudentInfo
+     */
     @GetMapping("/getstudentinfo")
     public CommonResult getinfo(@RequestHeader String token){
         Claims claims = jwtToken.getClaimByToken(token);
@@ -38,6 +43,69 @@ public class TeacherController {
         }
     }
 
+    /**
+     * 新增学生信息
+     * @param token
+     * @param studentInfo
+     * @return String成功与否
+     */
+    @PostMapping("/entryInformation")
+    public CommonResult entryinfo(@RequestHeader String token,
+                                  @RequestParam StudentInfo studentInfo) {
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(1)){
+            // 判断是否已有该学生信息
 
+            String studentId = (String) claims.get("username");
+            StudentInfo getinfo = teacherService.getStudentinfo(studentId);
+            if (getinfo != null) {
+                return CommonResult.failed("该生信息已存在");
+            } else if(teacherService.inputStudent(studentInfo).equals("0"))
+                return CommonResult.success("增加成功");
+            else
+                return CommonResult.failed("增加失败");
+        } else {
+            return CommonResult.failed("无权限");
+        }
+    }
 
+    /**
+     * 改变学生信息
+     * @param token
+     * @param studentInfo
+     * @return StudentInfo
+     */
+    @PostMapping("/change")
+    public CommonResult changeinfo(@RequestHeader String token,
+                                   @RequestParam StudentInfo studentInfo){
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(1)){
+            StudentInfo show = teacherService.changeStudentinfo(studentInfo);
+            return CommonResult.success(show);
+        } else {
+            return CommonResult.failed("无权限");
+        }
+    }
+
+    /**
+     * 删除学生信息
+     * @param token
+     * @param studentInfo
+     * @return String 成功与否
+     */
+    @PostMapping("/delete")
+    public CommonResult deleteStudent(@RequestHeader String token,
+                                      @RequestParam StudentInfo studentInfo){
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(1)){
+            String show = teacherService.deleteStudent(studentInfo);
+            if(show != null) {
+                return CommonResult.success(show);
+            }
+            else
+                return CommonResult.failed("不存在该生信息");
+        } else {
+            return CommonResult.failed("无权限");
+        }
+    }
 }

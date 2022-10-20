@@ -1,6 +1,8 @@
 package com.example.studentsinfosystem.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.entity.TeacherInfo;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +13,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TeacherInfoMapper extends BaseMapper<TeacherInfo> {
+    void insert(StudentInfo studentInfo);
+
+    void delete(QueryWrapper<StudentInfo> wrapper);
+
 }
