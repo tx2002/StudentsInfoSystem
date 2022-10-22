@@ -200,4 +200,21 @@ public class StudentController {
             return CommonResult.failed("无权限");
         }
     }
+
+    @PostMapping("/changePassword")
+    public CommonResult changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestHeader String token) {
+        Claims claims = jwtToken.getClaimByToken(token);
+        // 权限判断
+        if(claims.get("role").equals(2)){
+            String studentId = (String) claims.get("username");
+            String res = studentService.changePassword(studentId, oldPassword, newPassword);
+            if (res.equals("修改密码成功！")) {
+                return CommonResult.success(res);
+            } else {
+                return CommonResult.failed(res);
+            }
+        } else {
+            return CommonResult.failed("无权限");
+        }
+    }
 }
