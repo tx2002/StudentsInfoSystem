@@ -23,4 +23,6 @@ public class Score {
     private Integer term;
     // 课程成绩
     private Integer score;
+    // 学分
+    private String point;
 }
