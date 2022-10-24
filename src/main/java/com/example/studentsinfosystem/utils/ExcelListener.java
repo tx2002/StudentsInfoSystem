@@ -17,7 +17,6 @@ public class ExcelListener extends AnalysisEventListener<Student> {
         studentInfo.setStudentId(student.getStudentId());
         studentInfo.setStudentName(student.getName());
         studentInfo.setClassName(student.getClassName());
-        teacherService.inputStudent(studentInfo);
     }
 
     // 读取完成后做的内容

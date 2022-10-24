@@ -14,11 +14,10 @@ import java.util.List;
 public interface TeacherService {
     StudentInfo getStudentinfo(String studentId);
 
-    StudentInfo changeStudentinfo(StudentInfo studentInfo);
+    Integer addStudentInfo(StudentInfo studentInfo);
 
-    String  inputStudent(StudentInfo studentInfo);
-
-    String deleteStudent(StudentInfo studentInfo);
+    Integer changeStudentInfo(StudentInfo studentInfo);
+    Integer deleteStudentInfo(StudentInfo studentInfo);
 
     List<StudentInfo> getAllStudentInfo(String courseName);
 

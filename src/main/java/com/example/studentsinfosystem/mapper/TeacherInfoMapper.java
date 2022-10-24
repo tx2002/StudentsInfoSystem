@@ -13,8 +13,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TeacherInfoMapper extends BaseMapper<TeacherInfo> {
-    void insert(StudentInfo studentInfo);
-
-    void delete(QueryWrapper<StudentInfo> wrapper);
-
 }
