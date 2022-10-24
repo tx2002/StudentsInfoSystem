@@ -1,6 +1,7 @@
 package com.example.studentsinfosystem.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.studentsinfosystem.entity.*;
 import com.example.studentsinfosystem.mapper.*;
 import com.example.studentsinfosystem.service.StudentService;
@@ -25,6 +26,8 @@ public class StudentServiceImpl implements StudentService {
     ChooseCourseMapper chooseCourseMapper;
     @Autowired
     TeacherInfoMapper teacherInfoMapper;
+    @Autowired
+    AccountMapper accountMapper;
 
     @Override
     public StudentInfo getinfo(String studentId) {
@@ -105,5 +108,25 @@ public class StudentServiceImpl implements StudentService {
                         .eq("course_name", courseName);
         int delete = courseInfoMapper.delete(wrapper);
         return delete;
+    }
+
+    @Override
+    public String changePassword(String studentId, String oldPassword, String newPassword) {
+        QueryWrapper<Account> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", studentId);
+        String password = accountMapper.selectOne(wrapper).getPassword();
+        if (newPassword.isEmpty()) {
+            return "新密码不能为空！";
+        }
+        if (oldPassword.equals(password)) {
+            UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
+            updateWrapper
+                    .eq("username",studentId)
+                    .set("password",newPassword);
+            accountMapper.update(null,updateWrapper);
+            return "修改密码成功！";
+        } else {
+            return "旧密码错误！";
+        }
     }
 }

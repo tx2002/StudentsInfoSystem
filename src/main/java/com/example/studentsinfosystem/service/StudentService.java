@@ -80,4 +80,12 @@ public interface StudentService {
      * @return
      */
     int deleteCourse(String studentId, String courseName);
+
+    /**
+     * 修改密码
+     * @param studentId
+     * @param oldPassword
+     * @param newPassword
+     */
+    String changePassword(String studentId, String oldPassword, String newPassword);
 }
