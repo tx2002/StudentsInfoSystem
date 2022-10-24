@@ -79,29 +79,28 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 查询班级信息
-     * @param token
      * @param courseName
      * @return List<StudentInfo>
      */
     @Override
-    public List<StudentInfo> getAllStudentInfo(String token, String courseName) {
+    public List<StudentInfo> getAllStudentInfo(String courseName) {
+        QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
         return null;
+
     }
 
-
     @Override
-    public List<Score> getAllStudentScore(String token, String studentId) {
+    public List<Score> getAllStudentScore(String studentId) {
         return null;
     }
 
     /**
      * 查询老师自己的课程信息
-     * @param token
      * @param username
      * @return List<CourseInfo>
      */
     @Override
-    public List<CourseInfo> getAllCourseInfo(String token, String username) {
+    public List<CourseInfo> getAllCourseInfo( String username) {
         return null;
     }
 

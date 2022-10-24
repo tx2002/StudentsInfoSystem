@@ -20,9 +20,9 @@ public interface TeacherService {
 
     String deleteStudent(StudentInfo studentInfo);
 
-    List<StudentInfo> getAllStudentInfo(String token, String courseName);
+    List<StudentInfo> getAllStudentInfo(String courseName);
 
-    List<Score> getAllStudentScore(String token, String studentId);
+    List<Score> getAllStudentScore(String studentId);
 
-    List<CourseInfo> getAllCourseInfo(String token, String username);
+    List<CourseInfo> getAllCourseInfo(String username);
 }

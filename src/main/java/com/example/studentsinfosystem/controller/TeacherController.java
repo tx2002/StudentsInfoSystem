@@ -108,4 +108,16 @@ public class TeacherController {
             return CommonResult.failed("无权限");
         }
     }
+
+    @GetMapping("getstudentclss")
+    public CommonResult getStudentClass(@RequestHeader String token,
+                                        @RequestParam String courseName){
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(1)){
+            return CommonResult.success("null");
+        }
+        else {
+            return CommonResult.failed("无权限");
+        }
+    }
 }
