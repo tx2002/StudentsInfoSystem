@@ -1,13 +1,13 @@
 package com.example.studentsinfosystem.controller;
 
 import com.example.studentsinfosystem.api.CommonResult;
-import com.example.studentsinfosystem.entity.Account;
 import com.example.studentsinfosystem.service.CommonService;
 import com.example.studentsinfosystem.utils.JwtToken;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,5 +41,19 @@ public class CommonController {
 
     }
 
+//    @PostMapping("/inputstudentinfo")
+//    public CommonResult inputStudentInfo(@RequestHeader String token,
+//                                         @RequestBody File file) throws IOException {
+//        Claims claims = jwtToken.getClaimByToken(token);
+//        if(claims.get("role").equals(1)){
+//            int judge = commonService.inputStudentInfo(inputStream);
+//            if(judge==1)
+//                return CommonResult.success("导入成功");
+//            else
+//                return CommonResult.failed("导入失败");
+//        }
+//        else
+//            return CommonResult.failed("无权限");
+//    }
 
 }

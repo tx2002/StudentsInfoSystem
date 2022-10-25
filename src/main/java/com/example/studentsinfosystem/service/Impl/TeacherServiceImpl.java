@@ -39,69 +39,69 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
+     * 增加学生信息
+     * @param studentInfo
+     * @return Integer
+     */
+    @Override
+    public Integer addStudentInfo(StudentInfo studentInfo) {
+        int judge = studentInfoMapper.insert(studentInfo);
+        return judge;
+    }
+
+    /**
      * 修改学生信息
-     * 仅老师、管理员可以操作
-     * 如果成功，返回修改后的学生信息
      * @param studentInfo
-     * @return StudentInfo
+     * @return Integer
      */
     @Override
-    public StudentInfo changeStudentinfo(StudentInfo studentInfo) {
+    public Integer changeStudentInfo(StudentInfo studentInfo) {
         QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("student_id", studentInfo.getStudentId());
-        studentInfoMapper.update(studentInfo,wrapper);
-        return studentInfo;
+        int judge = studentInfoMapper.update(studentInfo,wrapper);
+        return judge;
     }
 
     /**
-     * 新增一个学生信息
+     * 删除学生信息
      * @param studentInfo
-     * @return String
+     * @return Integer
      */
     @Override
-    public String inputStudent(StudentInfo studentInfo) {
-        teacherInfoMapper.insert(studentInfo);
-        return "1";
-    }
-
-    /**
-     * 删除一个学生信息
-     * @param studentInfo
-     * @return String
-     */
-    @Override
-    public String deleteStudent(StudentInfo studentInfo) {
+    public Integer deleteStudentInfo(StudentInfo studentInfo) {
         QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("student_id", studentInfo.getStudentId());
-        teacherInfoMapper.delete(wrapper);
-        return "删除成功";
+        int judge = studentInfoMapper.delete(wrapper);
+        return judge;
     }
+
+
+
 
     /**
      * 查询班级信息
-     * @param token
      * @param courseName
      * @return List<StudentInfo>
      */
     @Override
-    public List<StudentInfo> getAllStudentInfo(String token, String courseName) {
+    public List<StudentInfo> getAllStudentInfo(String courseName) {
+        QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
         return null;
+
     }
 
-
     @Override
-    public List<Score> getAllStudentScore(String token, String studentId) {
+    public List<Score> getAllStudentScore(String studentId) {
         return null;
     }
 
     /**
      * 查询老师自己的课程信息
-     * @param token
      * @param username
      * @return List<CourseInfo>
      */
     @Override
-    public List<CourseInfo> getAllCourseInfo(String token, String username) {
+    public List<CourseInfo> getAllCourseInfo( String username) {
         return null;
     }
 
