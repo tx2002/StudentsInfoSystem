@@ -1,12 +1,15 @@
 package com.example.studentsinfosystem.controller;
 
 import com.example.studentsinfosystem.api.CommonResult;
+import com.example.studentsinfosystem.entity.CourseInfo;
 import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.service.TeacherService;
 import com.example.studentsinfosystem.utils.JwtToken;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author 梁鑫宇
@@ -91,15 +94,15 @@ public class TeacherController {
     /**
      * 删除学生信息
      * @param token
-     * @param studentInfo
+     * @param studentId
      * @return String 成功与否
      */
-    @PostMapping("/deletestudentInfo")
+    @PostMapping("/deletestudentinfo")
     public CommonResult deleteStudentInfo(@RequestHeader String token,
-                                          @RequestBody StudentInfo studentInfo){
+                                          @RequestParam String studentId){
         Claims claims = jwtToken.getClaimByToken(token);
         if(claims.get("role").equals(1)){
-            if(teacherService.deleteStudentInfo(studentInfo)==1)
+            if(teacherService.deleteStudentInfo(studentId)==1)
                 return CommonResult.success("删除成功");
             else
                 return CommonResult.failed("删除失败");
@@ -108,15 +111,38 @@ public class TeacherController {
         }
     }
 
-    @GetMapping("getstudentclss")
-    public CommonResult getStudentClass(@RequestHeader String token,
-                                        @RequestParam String courseName){
+    /**
+     * 查询所教的课程信息
+     * @param token
+     * @return CourseInfo
+     */
+    @GetMapping("/getcourse")
+    public  CommonResult getCourse(@RequestHeader String token){
         Claims claims = jwtToken.getClaimByToken(token);
         if(claims.get("role").equals(1)){
-            return CommonResult.success("null");
+            List<CourseInfo> courseInfos = teacherService.getCourse((String) claims.get("username"));
+            return CommonResult.success(courseInfos);
         }
-        else {
+        else
             return CommonResult.failed("无权限");
-        }
     }
+
+    /**
+     * 查询某一课程中的学生信息
+     * @param token
+     * @param courseName
+     * @return
+     */
+    @GetMapping("/getcoursestudentinfo")
+    public CommonResult getCourseStudentInfo(@RequestHeader String token,
+                                             @RequestParam String courseName){
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(1)){
+            List<CourseInfo> coursestudentInfos = teacherService.getCourseStudentInfo(courseName, (String) claims.get("username"));
+            return CommonResult.success(coursestudentInfos);
+        }
+        else
+            return CommonResult.failed("无权限");
+    }
+
 }

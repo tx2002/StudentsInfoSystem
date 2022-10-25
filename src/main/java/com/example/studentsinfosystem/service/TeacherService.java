@@ -13,15 +13,9 @@ import java.util.List;
 
 public interface TeacherService {
     StudentInfo getStudentinfo(String studentId);
-
     Integer addStudentInfo(StudentInfo studentInfo);
-
     Integer changeStudentInfo(StudentInfo studentInfo);
-    Integer deleteStudentInfo(StudentInfo studentInfo);
-
-    List<StudentInfo> getAllStudentInfo(String courseName);
-
-    List<Score> getAllStudentScore(String studentId);
-
-    List<CourseInfo> getAllCourseInfo(String username);
+    Integer deleteStudentInfo(String studentId);
+    List<CourseInfo> getCourseStudentInfo(String courseName, String teacherId);
+    List<CourseInfo> getCourse(String username);
 }
