@@ -6,6 +6,7 @@ import com.example.studentsinfosystem.entity.CourseInfo;
 import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,6 +21,6 @@ public interface CommonService {
     String login(String usename, String password);
 
     // 下载和上传
-    int inputStudentInfo(InputStream inputStream) throws IOException;
+    int inputStudentInfo(String address) throws IOException;
 
 }

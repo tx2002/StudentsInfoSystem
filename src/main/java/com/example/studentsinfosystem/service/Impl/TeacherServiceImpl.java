@@ -48,7 +48,7 @@ public class TeacherServiceImpl implements TeacherService {
         Account account = new Account();
         account.setRole(1);
         account.setUsername(studentInfo.getStudentId());
-        account.setPassword(studentInfo.getStudentId());
+        account.setPassword(studentInfo.getStudentId().substring(3,9));
         accountMapper.insert(account);
         return judge;
     }
