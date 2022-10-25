@@ -201,11 +201,18 @@ public class StudentController {
         }
     }
 
+    /**
+     * 修改密码
+     * @param oldPassword
+     * @param newPassword
+     * @param token
+     * @return
+     */
     @PostMapping("/changePassword")
     public CommonResult changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(2)){
+        if(claims.get("role").equals(0) || claims.get("role").equals(1) || claims.get("role").equals(2)){
             String studentId = (String) claims.get("username");
             String res = studentService.changePassword(studentId, oldPassword, newPassword);
             if (res.equals("修改密码成功！")) {
