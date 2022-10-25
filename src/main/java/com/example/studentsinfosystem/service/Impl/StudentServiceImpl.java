@@ -58,8 +58,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Score> report(String studentId, Integer term) {
         QueryWrapper<Score> wrapper = new QueryWrapper<>();
-        wrapper.eq("student_id", studentId)
-                .eq("term", term);
+        if (term == 0) {
+            wrapper.eq("student_id", studentId);
+        } else {
+            wrapper.eq("student_id", studentId)
+                    .eq("term", term);
+        }
         List<Score> list = scoreMapper.selectList(wrapper);
         return list;
     }
