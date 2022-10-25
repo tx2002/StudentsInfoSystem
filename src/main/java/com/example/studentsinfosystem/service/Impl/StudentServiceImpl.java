@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * 学生相关Service层
  * @author TX
  * @date 2022/10/8 9:09
  */
@@ -73,7 +74,6 @@ public class StudentServiceImpl implements StudentService {
 
     /**
      * 根据班级查询可选课程
-     *
      * @param className
      * @param term
      * @return
