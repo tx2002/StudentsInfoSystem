@@ -3,12 +3,13 @@ package com.example.studentsinfosystem.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.studentsinfosystem.entity.Account;
+import com.example.studentsinfosystem.entity.CourseInfo;
 import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.mapper.AccountMapper;
+import com.example.studentsinfosystem.mapper.CourseInfoMapper;
 import com.example.studentsinfosystem.mapper.StudentInfoMapper;
 import com.example.studentsinfosystem.service.CommonService;
 import com.example.studentsinfosystem.utils.JwtToken;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -36,6 +37,9 @@ import java.io.IOException;
 
         @Autowired
         StudentInfoMapper studentInfoMapper;
+
+        @Autowired
+        CourseInfoMapper courseInfoMapper;
 
         @Override
         public String login(String usename, String password) {
@@ -97,6 +101,62 @@ import java.io.IOException;
 
             judge = studentInfoMapper.insert(studentInfo);
             accountMapper.insert(account);
+        }
+        return judge;
+    }
+
+    /**
+     * 上传课程信息
+     * @param address
+     * @return Integer
+     * @throws IOException
+     */
+    @Override
+    public int inputCourseInfo(String address) throws IOException {
+        int judge = 0;
+        FileInputStream inputStream = new FileInputStream(address);
+        XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        int rowTotalCount = sheet.getLastRowNum();
+        XSSFRow rowAll = sheet.getRow(0);
+        int columnTotalCount = rowAll.getLastCellNum();
+        for (int i=1; i<=rowTotalCount; i++){
+            CourseInfo courseInfo = new CourseInfo();
+            for(int j=0; j<=columnTotalCount; j++){
+                switch (j){
+                    case 0:
+                        XSSFRow row0 = sheet.getRow(i);
+                        row0.getCell(j).setCellType(CellType.STRING);
+                        Cell cell0 = row0.getCell(j);
+                        courseInfo.setCourseName(cell0.getStringCellValue());
+                    case 1:
+                        XSSFRow row1 = sheet.getRow(i);
+                        row1.getCell(j).setCellType(CellType.STRING);
+                        Cell cell1 = row1.getCell(j);
+                        courseInfo.setTeacher(cell1.getStringCellValue());
+                    case 2:
+                        XSSFRow row2 = sheet.getRow(i);
+                        row2.getCell(j).setCellType(CellType.STRING);
+                        Cell cell2 = row2.getCell(j);
+                        courseInfo.setTeacherId(cell2.getStringCellValue());
+                    case 3:
+                        XSSFRow row3 = sheet.getRow(i);
+                        row3.getCell(j).setCellType(CellType.STRING);
+                        Cell cell3 = row3.getCell(j);
+                        courseInfo.setPoint(cell3.getStringCellValue());
+                    case 4:
+                        XSSFRow row4 = sheet.getRow(i);
+                        row4.getCell(j).setCellType(CellType.STRING);
+                        Cell cell4 = row4.getCell(j);
+                        courseInfo.setStudentId(cell4.getStringCellValue());
+                    case 5:
+                        XSSFRow row5 = sheet.getRow(i);
+                        row5.getCell(j).setCellType(CellType.NUMERIC);
+                        Cell cell5 = row5.getCell(j);
+                        courseInfo.setTerm((int)cell5.getNumericCellValue());
+                }
+            }
+            judge = courseInfoMapper.insert(courseInfo);
         }
         return judge;
     }

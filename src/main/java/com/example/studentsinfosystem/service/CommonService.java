@@ -20,7 +20,9 @@ public interface CommonService {
     // 登录
     String login(String usename, String password);
 
-    // 下载和上传
+    // 上传学生信息
     int inputStudentInfo(String address) throws IOException;
 
+    // 上传课程信息
+    int inputCourseInfo(String address) throws  IOException;
 }
