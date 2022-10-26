@@ -133,4 +133,25 @@ public class StudentServiceImpl implements StudentService {
             return "旧密码错误！";
         }
     }
+
+    @Override
+    public String getStudentNameById(String studentId) {
+        QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId);
+        return studentInfoMapper.selectOne(wrapper).getStudentName();
+    }
+
+    @Override
+    public int insertScore(Score newScore) {
+        return scoreMapper.insert(newScore);
+    }
+
+    @Override
+    public int deleteScore(String studentId, String courseName) {
+        QueryWrapper<Score> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId)
+                .eq("course_name", courseName);
+        int delete = scoreMapper.delete(wrapper);
+        return delete;
+    }
 }

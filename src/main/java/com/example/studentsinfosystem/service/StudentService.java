@@ -88,4 +88,10 @@ public interface StudentService {
      * @param newPassword
      */
     String changePassword(String studentId, String oldPassword, String newPassword);
+
+    String getStudentNameById(String studentId);
+
+    int insertScore(Score newScore);
+
+    int deleteScore(String studentId, String courseName);
 }
