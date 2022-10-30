@@ -18,4 +18,5 @@ public interface TeacherService {
     Integer deleteStudentInfo(String studentId);
     List<CourseInfo> getCourseStudentInfo(String courseName, String teacherId);
     List<CourseInfo> getCourse(String username);
+    Integer changeStudentScore(Integer score,String courseName,String studentId);
 }

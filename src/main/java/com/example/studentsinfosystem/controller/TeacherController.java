@@ -2,6 +2,7 @@ package com.example.studentsinfosystem.controller;
 
 import com.example.studentsinfosystem.api.CommonResult;
 import com.example.studentsinfosystem.entity.CourseInfo;
+import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.service.TeacherService;
 import com.example.studentsinfosystem.utils.JwtToken;
@@ -145,4 +146,25 @@ public class TeacherController {
             return CommonResult.failed("无权限");
     }
 
+    /**
+     * 修改学生成绩
+     * @param token
+     * @param score
+     * @return String，成功与否的信息
+     */
+    @PostMapping("/changescore")
+    public CommonResult changeScore(@RequestHeader String token,
+                                    @RequestParam Integer score,
+                                    @RequestParam String courseName,
+                                    @RequestParam String studentId){
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(1)){
+            if (teacherService.changeStudentScore(score,courseName,studentId) == 1)
+                return CommonResult.success("修改成功");
+            else
+                return CommonResult.failed("修改失败");
+        }
+        else
+            return CommonResult.failed("无权限");
+    }
 }

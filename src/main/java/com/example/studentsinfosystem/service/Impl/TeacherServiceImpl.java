@@ -110,5 +110,15 @@ public class TeacherServiceImpl implements TeacherService {
         wrapper.eq("teacher_id", username);
         return courseInfoMapper.selectList(wrapper);
     }
+
+    @Override
+    public Integer changeStudentScore(Integer score,String courseName,String studentId){
+        QueryWrapper<Score> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId)
+                .eq("course_name", courseName);
+        Score scores = scoreMapper.selectOne(wrapper);
+        scores.setScore(score);
+        return scoreMapper.update(scores, wrapper);
+    }
 }
 
