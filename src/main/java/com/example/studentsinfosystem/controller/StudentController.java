@@ -159,7 +159,7 @@ public class StudentController {
                     addCourse = i;
                 }
             }
-            // 在学生课程中新增
+            // 在学生课程信息中新增
             CourseInfo newCourse = new CourseInfo();
             newCourse.setCourseName(addCourse.getCourseName());
             newCourse.setStudentId(studentId);
@@ -168,6 +168,18 @@ public class StudentController {
             newCourse.setTeacherId(studentService.getTeacherIdByName(addCourse.getTeacher()));
             newCourse.setTerm(addCourse.getTerm());
             int insert = studentService.insert(newCourse);
+
+            // 在成绩表中新增
+            Score newScore = new Score();
+            newScore.setScore(-1);
+            newScore.setTerm(newCourse.getTerm());
+            newScore.setPoint(newCourse.getPoint());
+            newScore.setCourseName(newCourse.getCourseName());
+            newScore.setStudentId(studentId);
+            // 根据学号查询学生姓名
+            newScore.setStudentName(studentService.getStudentNameById(studentId));
+            int insert2 = studentService.insertScore(newScore);
+
             if (insert == 1) {
                 return CommonResult.success("选课成功！");
             } else {
@@ -190,7 +202,11 @@ public class StudentController {
         // 权限判断
         if(claims.get("role").equals(2)){
             String studentId = (String) claims.get("username");
+            // 在课程信息表中删除
             int delete = studentService.deleteCourse(studentId, courseName);
+            // 在成绩表中删除
+            int delete2 = studentService.deleteScore(studentId, courseName);
+
             if (delete == 1) {
                 return CommonResult.success("退选成功！");
             } else {
