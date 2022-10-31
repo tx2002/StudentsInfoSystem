@@ -101,9 +101,9 @@ public class TeacherServiceImpl implements TeacherService {
         QueryWrapper<CourseInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("course_name", courseName)
                 .eq("teacher_id", teacherId);
-        QueryWrapper<Score> wrapper1 = new QueryWrapper<>();
         List<CourseInfo> courseInfos = courseInfoMapper.selectList(wrapper);
         for(CourseInfo i: courseInfos){
+            QueryWrapper<Score> wrapper1 = new QueryWrapper<>();
             String studentId = i.getStudentId();
             wrapper1.eq("student_id", studentId)
                     .eq("course_name", courseName);
