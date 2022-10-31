@@ -200,7 +200,7 @@ import java.util.List;
         Cell cell5 = row0.createCell(5);
         cell5.setCellValue("学分");
 
-        String time = String.valueOf(new Date().getTime()/1000);
+        String time = String.valueOf(System.currentTimeMillis()/1000);
         String str = "\\home\\Android\\excelout\\";
         String address = str+courseName+"学生成绩信息"+time+".xlsx";
         // 测试输出
