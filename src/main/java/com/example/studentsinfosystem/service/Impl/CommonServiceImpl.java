@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -200,7 +201,9 @@ import java.util.List;
         Cell cell5 = row0.createCell(5);
         cell5.setCellValue("学分");
 
-        String time = String.valueOf(System.currentTimeMillis()/1000);
+        Date now = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = format.format(now);
         String str = "\\home\\Android\\excelout\\";
         String address = str+courseName+"学生成绩信息"+time+".xlsx";
         // 测试输出
