@@ -109,6 +109,7 @@ public class TeacherServiceImpl implements TeacherService {
                     .eq("course_name", courseName);
             Score score = scoreMapper.selectOne(wrapper1);
             i.setId(score.getScore());
+            i.setTeacher(score.getStudentName());
         }
         return courseInfos;
     }
