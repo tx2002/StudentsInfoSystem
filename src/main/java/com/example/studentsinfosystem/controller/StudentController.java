@@ -308,7 +308,7 @@ public class StudentController {
                 cell4.setCellValue("是否已选");
 
                 Date now = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                 String time = format.format(now);
                 String fileName = studentId+"-"+time+".xlsx";
 
@@ -389,7 +389,7 @@ public class StudentController {
                 cell4.setCellValue("开课学期");
 
                 Date now = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                 String time = format.format(now);
                 String fileName = studentId+"-"+time+".xlsx";
 
@@ -462,10 +462,10 @@ public class StudentController {
                 Cell cell4 = row0.createCell(4);
                 cell4.setCellValue("学分");
                 Cell cell5 = row0.createCell(5);
-                cell4.setCellValue("成绩");
+                cell5.setCellValue("成绩");
 
                 Date now = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                 String time = format.format(now);
                 String fileName = studentId+"-"+time+".xlsx";
 
