@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 梁鑫宇
@@ -126,7 +127,7 @@ public class TeacherController {
     public  CommonResult getCourse(@RequestHeader String token){
         Claims claims = jwtToken.getClaimByToken(token);
         if(claims.get("role").equals(1)){
-            List<CourseInfo> courseInfos = teacherService.getCourse((String) claims.get("username"));
+            Set<String> courseInfos = teacherService.getCourse((String) claims.get("username"));
             return CommonResult.success(courseInfos);
         }
         else
