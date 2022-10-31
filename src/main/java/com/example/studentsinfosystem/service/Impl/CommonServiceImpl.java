@@ -4,13 +4,16 @@ package com.example.studentsinfosystem.service.Impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.studentsinfosystem.entity.Account;
 import com.example.studentsinfosystem.entity.CourseInfo;
+import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.mapper.AccountMapper;
 import com.example.studentsinfosystem.mapper.CourseInfoMapper;
+import com.example.studentsinfosystem.mapper.ScoreMapper;
 import com.example.studentsinfosystem.mapper.StudentInfoMapper;
 import com.example.studentsinfosystem.service.CommonService;
 import com.example.studentsinfosystem.utils.JwtToken;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,7 +22,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.List;
 
 /**
      *
@@ -40,6 +47,10 @@ import java.io.IOException;
 
         @Autowired
         CourseInfoMapper courseInfoMapper;
+
+        @Autowired
+        ScoreMapper scoreMapper;
+
 
         @Override
         public String login(String usename, String password) {
@@ -159,5 +170,66 @@ import java.io.IOException;
             judge = courseInfoMapper.insert(courseInfo);
         }
         return judge;
+    }
+
+    @Override
+    public String outputStudentScore(String courseName ) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        Font font = workbook.createFont();
+        font.setFontName("宋体");
+        font.setFontHeightInPoints((short) 12);
+        cellStyle.setFont(font);
+        XSSFSheet sheet = workbook.createSheet("Sheet1");
+        Row row0 = sheet.createRow(0);
+        Cell cell0 = row0.createCell(0);
+        cell0.setCellValue("学号");
+        cell0.setCellStyle(cellStyle);
+        Cell cell1 = row0.createCell(1);
+        cell1.setCellValue("姓名");
+        Cell cell2 = row0.createCell(2);
+        cell2.setCellValue("课程名");
+        Cell cell3 = row0.createCell(3);
+        cell3.setCellValue("开课学期");
+        Cell cell4 = row0.createCell(4);
+        cell4.setCellValue("分数");
+        Cell cell5 = row0.createCell(5);
+        cell5.setCellValue("学分");
+
+        String time = String.valueOf(new Date().getTime()/1000);
+        String str = "\\home\\Android\\excelout\\";
+        String address = str+courseName+"学生成绩信息"+time+".xlsx";
+        // 测试输出
+        System.out.println(address);
+
+        QueryWrapper<Score> wrapper = new QueryWrapper<>();
+        wrapper.eq("course_name", courseName);
+        List<Score> list = scoreMapper.selectList(wrapper);
+
+        int rowNum = 1;
+        for(Score score : list){
+            XSSFRow row1 = sheet.createRow(rowNum);
+            row1.createCell(0).setCellValue(score.getStudentId());
+            row1.createCell(1).setCellValue(score.getStudentName());
+            row1.createCell(2).setCellValue(score.getCourseName());
+            row1.createCell(3).setCellValue(score.getTerm());
+            row1.createCell(4).setCellValue(score.getScore());
+            row1.createCell(5).setCellValue(score.getPoint());
+            rowNum++;
+        }
+
+
+        try {
+            OutputStream os = new FileOutputStream(address);
+            workbook.write(os);
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return address;
     }
 }

@@ -3,6 +3,7 @@ package com.example.studentsinfosystem.service;
 import com.example.studentsinfosystem.entity.CourseInfo;
 import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
+import com.example.studentsinfosystem.entity.TeacherInfo;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 
 public interface TeacherService {
-    StudentInfo getStudentinfo(String studentId);
+    TeacherInfo getinfo(String teacherId);
     Integer addStudentInfo(StudentInfo studentInfo);
     Integer changeStudentInfo(StudentInfo studentInfo);
     Integer deleteStudentInfo(String studentId);

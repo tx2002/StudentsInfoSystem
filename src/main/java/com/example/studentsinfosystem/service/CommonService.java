@@ -25,4 +25,7 @@ public interface CommonService {
 
     // 上传课程信息
     int inputCourseInfo(String address) throws  IOException;
+
+
+    String outputStudentScore(String courseName);
 }

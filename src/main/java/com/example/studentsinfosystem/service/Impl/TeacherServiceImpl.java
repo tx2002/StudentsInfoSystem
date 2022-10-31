@@ -25,14 +25,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 查询学生信息
-     * @param studentId
+     * @param teacherId
      * @return studentInfo
      */
     @Override
-    public StudentInfo getStudentinfo(String studentId) {
-        QueryWrapper<StudentInfo> wrapper = new QueryWrapper<>();
-        wrapper.eq("student_id", studentId);
-        return studentInfoMapper.selectOne(wrapper);
+    public TeacherInfo getinfo(String teacherId) {
+        QueryWrapper<TeacherInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("teacher_id", teacherId);
+        return teacherInfoMapper.selectOne(wrapper);
     }
 
     /**

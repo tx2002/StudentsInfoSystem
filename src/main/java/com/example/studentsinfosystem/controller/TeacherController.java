@@ -4,6 +4,8 @@ import com.example.studentsinfosystem.api.CommonResult;
 import com.example.studentsinfosystem.entity.CourseInfo;
 import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
+import com.example.studentsinfosystem.entity.TeacherInfo;
+import com.example.studentsinfosystem.service.StudentService;
 import com.example.studentsinfosystem.service.TeacherService;
 import com.example.studentsinfosystem.utils.JwtToken;
 import io.jsonwebtoken.Claims;
@@ -25,22 +27,25 @@ public class TeacherController {
     @Autowired
     TeacherService teacherService;
 
+    @Autowired
+    StudentService studentService;
+
     /**
      * 显示学生信息
      * @param token
-     * @return StudentInfo
+     * @return TeacherInfo
      */
-    @GetMapping("/getstudentinfo")
+    @GetMapping("/getinfo")
     public CommonResult getinfo(@RequestHeader String token){
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(1) || claims.get("role").equals(2)){
-            String studentId = (String) claims.get("username");
-            StudentInfo getinfo = teacherService.getStudentinfo(studentId);
+        if(claims.get("role").equals(1)){
+            String teacherId = (String) claims.get("username");
+            TeacherInfo getinfo = teacherService.getinfo(teacherId);
             if (getinfo != null) {
                 return CommonResult.success(getinfo);
             } else {
-                return CommonResult.failed("未查询到该学生");
+                return CommonResult.failed("未查询到老师信息");
             }
         } else {
             return CommonResult.failed("无权限");
@@ -60,7 +65,7 @@ public class TeacherController {
         if(claims.get("role").equals(1)){
             // 判断是否已有该学生信息
             String studentId = studentInfo.getStudentId();
-            StudentInfo getinfo = teacherService.getStudentinfo(studentId);
+            StudentInfo getinfo = studentService.getinfo(studentId);
             if (getinfo != null) {
                 return CommonResult.failed("该生信息已存在");
             } else if(teacherService.addStudentInfo(studentInfo)==1)

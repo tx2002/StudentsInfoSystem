@@ -75,6 +75,13 @@ public class CommonController {
             return CommonResult.failed("无权限");
     }
 
+    /**
+     * 导入课程
+     * @param token
+     * @param file
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/inputcourseinfo")
     public CommonResult inputCoursseInfo(@RequestHeader String token,
                                          @RequestBody MultipartFile file) throws Exception {
@@ -89,5 +96,22 @@ public class CommonController {
                 return CommonResult.failed("导入失败");
         } else
             return CommonResult.failed("无权限");
+    }
+
+    /**
+     * 查询所教课程中学生的成绩
+     * @param token
+     * @param courseName
+     * @return
+     */
+    @GetMapping("/outputstudentscore")
+    public CommonResult outputStudent(@RequestHeader String token,
+                                      @RequestParam String courseName){
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(1)){
+            String address = commonService.outputStudentScore(courseName);
+            return CommonResult.success(address);
+        }
+        return CommonResult.failed("失败");
     }
 }
