@@ -2,14 +2,9 @@ package com.example.studentsinfosystem.service;
 
 
 
-import com.example.studentsinfosystem.entity.CourseInfo;
-import com.example.studentsinfosystem.entity.Score;
-import com.example.studentsinfosystem.entity.StudentInfo;
+import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * @author 梁鑫宇
@@ -26,6 +21,4 @@ public interface CommonService {
     // 上传课程信息
     int inputCourseInfo(String address) throws  IOException;
 
-
-    String outputStudentScore(String courseName);
 }
