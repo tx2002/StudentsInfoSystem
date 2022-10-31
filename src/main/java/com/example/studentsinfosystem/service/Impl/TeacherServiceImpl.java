@@ -7,9 +7,7 @@ import com.example.studentsinfosystem.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
@@ -102,23 +100,41 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * 查询老师自己的课程信息
-     * @param username
      * @param
+     * @param username
      * @return List<CourseInfo>
      */
     @Override
-    public Set getCourse(String username) {
+    public List<CourseInfo> getCourse(String username) {
         QueryWrapper<CourseInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("teacher_id",username);
 
+
         HashSet<String> set = new HashSet<>();
+
         List<CourseInfo> courseInfos =  courseInfoMapper.selectList(wrapper);
+        List<CourseInfo> list = new ArrayList<>();
+
+        int n = 0;
         for(CourseInfo i: courseInfos){
+            n = set.size();
             set.add(i.getCourseName());
+            if(set.size()!=n){
+                list.add(i);
+            }
         }
-        return set;
+
+
+        return list;
     }
 
+    /**
+     * 修改学生成绩
+     * @param score
+     * @param courseName
+     * @param studentId
+     * @return
+     */
     @Override
     public Integer changeStudentScore(Integer score,String courseName,String studentId){
         QueryWrapper<Score> wrapper = new QueryWrapper<>();

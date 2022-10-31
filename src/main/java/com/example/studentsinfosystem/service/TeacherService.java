@@ -1,12 +1,10 @@
 package com.example.studentsinfosystem.service;
 
 import com.example.studentsinfosystem.entity.CourseInfo;
-import com.example.studentsinfosystem.entity.Score;
 import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.entity.TeacherInfo;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author 梁鑫宇
@@ -19,6 +17,6 @@ public interface TeacherService {
     Integer changeStudentInfo(StudentInfo studentInfo);
     Integer deleteStudentInfo(String studentId);
     List<CourseInfo> getCourseStudentInfo(String courseName, String teacherId);
-    Set<String> getCourse(String username);
+    List<CourseInfo> getCourse(String username);
     Integer changeStudentScore(Integer score,String courseName,String studentId);
 }

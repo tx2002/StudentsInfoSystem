@@ -127,7 +127,7 @@ public class TeacherController {
     public  CommonResult getCourse(@RequestHeader String token){
         Claims claims = jwtToken.getClaimByToken(token);
         if(claims.get("role").equals(1)){
-            Set<String> courseInfos = teacherService.getCourse((String) claims.get("username"));
+            List<CourseInfo> courseInfos = teacherService.getCourse((String) claims.get("username"));
             return CommonResult.success(courseInfos);
         }
         else

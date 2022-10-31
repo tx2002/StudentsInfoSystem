@@ -299,7 +299,7 @@ public class CommonController {
     public CommonResult outputCourseInfo(HttpServletResponse response,
                                          @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
-        Set<String> courseInfos = teacherService.getCourse((String) claims.get("username"));
+        List<CourseInfo> courseInfos = teacherService.getCourse((String) claims.get("username"));
         if (claims.get("role").equals(1) || claims.get("role").equals(0)) {
             if (!courseInfos.isEmpty()) {
                 // 创建表格
@@ -320,6 +320,10 @@ public class CommonController {
                 cell0.setCellStyle(cellStyle);
                 Cell cell1 = row0.createCell(1);
                 cell1.setCellValue("任课老师");
+                Cell cell2 = row0.createCell(2);
+                cell2.setCellValue("学分");
+                Cell cell3 = row0.createCell(3);
+                cell3.setCellValue("开课学期");
 
                 // 生成一个本地时间，用于命名
                 Date now = new Date();
@@ -329,10 +333,12 @@ public class CommonController {
 
 
                 int rowNum = 1;
-                for (String i : courseInfos) {
+                for (CourseInfo i : courseInfos) {
                     XSSFRow row1 = sheet.createRow(rowNum);
-                    row1.createCell(0).setCellValue(i);
-                    row1.createCell(1).setCellValue((String) claims.get("username"));
+                    row1.createCell(0).setCellValue(i.getCourseName());
+                    row1.createCell(1).setCellValue(i.getTeacher());
+                    row1.createCell(2).setCellValue(i.getPoint());
+                    row1.createCell(3).setCellValue(i.getTerm());
                     rowNum++;
                 }
 
