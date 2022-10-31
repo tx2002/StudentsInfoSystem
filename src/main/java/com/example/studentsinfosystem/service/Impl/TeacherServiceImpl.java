@@ -75,11 +75,17 @@ public class TeacherServiceImpl implements TeacherService {
     public Integer deleteStudentInfo(String studentId) {
         QueryWrapper<StudentInfo> wrapper1 = new QueryWrapper<>();
         QueryWrapper<Account> wrapper2 = new QueryWrapper<>();
+        QueryWrapper<CourseInfo> wrapper3 = new QueryWrapper<>();
+        QueryWrapper<Score> wrapper4 = new QueryWrapper<>();
         wrapper1.eq("student_id", studentId);
         wrapper2.eq("username", studentId);
+        wrapper3.eq("student_id", studentId);
+        wrapper4.eq("student_id", studentId);
         int judge = studentInfoMapper.delete(wrapper1);
         // 删除账户信息
         accountMapper.delete(wrapper2);
+        courseInfoMapper.delete(wrapper3);
+        scoreMapper.delete(wrapper4);
         return judge;
     }
 
@@ -95,7 +101,16 @@ public class TeacherServiceImpl implements TeacherService {
         QueryWrapper<CourseInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("course_name", courseName)
                 .eq("teacher_id", teacherId);
-        return courseInfoMapper.selectList(wrapper);
+        QueryWrapper<Score> wrapper1 = new QueryWrapper<>();
+        List<CourseInfo> courseInfos = courseInfoMapper.selectList(wrapper);
+        for(CourseInfo i: courseInfos){
+            String studentId = i.getStudentId();
+            wrapper1.eq("student_id", studentId)
+                    .eq("course_name", courseName);
+            Score score = scoreMapper.selectOne(wrapper1);
+            i.setId(score.getScore());
+        }
+        return courseInfos;
     }
 
     /**
