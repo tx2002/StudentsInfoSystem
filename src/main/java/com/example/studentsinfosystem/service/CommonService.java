@@ -21,4 +21,6 @@ public interface CommonService {
     // 上传课程信息
     int inputCourseInfo(String address) throws  IOException;
 
+    // 上传老师信息
+    int inputTeacherInfo(String address) throws  IOException;
 }

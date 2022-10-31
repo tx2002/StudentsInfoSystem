@@ -11,6 +11,11 @@ import com.example.studentsinfosystem.service.TeacherService;
 import com.example.studentsinfosystem.utils.JwtToken;
 import com.example.studentsinfosystem.utils.MultipartFileToFile;
 import io.jsonwebtoken.Claims;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.UploadObjectArgs;
+import io.minio.errors.MinioException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -21,7 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -118,6 +126,22 @@ public class CommonController {
             return CommonResult.failed("无权限");
     }
 
+    @PostMapping("/inputteacherinfo")
+    public CommonResult inputTeacherInfo(@RequestHeader String token,
+                                         @RequestBody MultipartFile file) throws Exception{
+        Claims claims = jwtToken.getClaimByToken(token);
+        if(claims.get("role").equals(0)){
+            File files = MultipartFileToFile.multipartFileToFile(file);
+            String address = files.getAbsolutePath();
+            int judge = commonService.inputTeacherInfo(address);
+            if (judge == 1)
+                return CommonResult.success("导入成功");
+            else
+                return CommonResult.failed("导入失败");
+        } else
+            return CommonResult.failed("无权限");
+    }
+
     /**
      * 查询所教课程中学生的成绩
      * @param token
@@ -196,7 +220,32 @@ public class CommonController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return CommonResult.success("下载成功");
+                // Minio
+                try {
+                    MinioClient minioClient =
+                            MinioClient.builder()
+                                    .endpoint("http://1.117.115.133:9000")
+                                    .credentials("7bhUZhY8i0RBpiGU", "KlPntiSmUQylYvmlsYatnVOAV64icHW4")
+                                    .build();
+                    boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("student").build());
+                    if (!found) {
+                        minioClient.makeBucket(MakeBucketArgs.builder().bucket("student").build());
+                    } else {
+                        System.out.println("Bucket 'student' already exists.");
+                    }
+
+                    minioClient.uploadObject(
+                            UploadObjectArgs.builder()
+                                    .bucket("student")
+                                    .object(fileName)
+                                    .filename("/home/android/" + fileName)
+                                    .build());
+
+                } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                    System.out.println("Error occurred: " + e);
+                    System.out.println("上传失败");
+                }
+                return CommonResult.success("http://1.117.115.133:9000/student/" + fileName);
             } else
                 return CommonResult.failed("下载的目标为空");
         } else
@@ -282,7 +331,32 @@ public class CommonController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return CommonResult.success("下载成功");
+                // Minio
+                try {
+                    MinioClient minioClient =
+                            MinioClient.builder()
+                                    .endpoint("http://1.117.115.133:9000")
+                                    .credentials("7bhUZhY8i0RBpiGU", "KlPntiSmUQylYvmlsYatnVOAV64icHW4")
+                                    .build();
+                    boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("student").build());
+                    if (!found) {
+                        minioClient.makeBucket(MakeBucketArgs.builder().bucket("student").build());
+                    } else {
+                        System.out.println("Bucket 'student' already exists.");
+                    }
+
+                    minioClient.uploadObject(
+                            UploadObjectArgs.builder()
+                                    .bucket("student")
+                                    .object(fileName)
+                                    .filename("/home/android/" + fileName)
+                                    .build());
+
+                } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                    System.out.println("Error occurred: " + e);
+                    System.out.println("上传失败");
+                }
+                return CommonResult.success("http://1.117.115.133:9000/student/" + fileName);
             } else
                 return CommonResult.failed("下载的目标为空");
         } else
@@ -358,7 +432,32 @@ public class CommonController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return CommonResult.success("下载成功");
+                // Minio 统一的命字都是student
+                try {
+                    MinioClient minioClient =
+                            MinioClient.builder()
+                                    .endpoint("http://1.117.115.133:9000")
+                                    .credentials("7bhUZhY8i0RBpiGU", "KlPntiSmUQylYvmlsYatnVOAV64icHW4")
+                                    .build();
+                    boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("student").build());
+                    if (!found) {
+                        minioClient.makeBucket(MakeBucketArgs.builder().bucket("student").build());
+                    } else {
+                        System.out.println("Bucket 'student' already exists.");
+                    }
+
+                    minioClient.uploadObject(
+                            UploadObjectArgs.builder()
+                                    .bucket("student")
+                                    .object(fileName)
+                                    .filename("/home/android/" + fileName)
+                                    .build());
+
+                } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                    System.out.println("Error occurred: " + e);
+                    System.out.println("上传失败");
+                }
+                return CommonResult.success("http://1.117.115.133:9000/student/" + fileName);
             } else
                 return CommonResult.failed("下载的目标为空");
         } else
