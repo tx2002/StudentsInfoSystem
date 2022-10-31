@@ -31,43 +31,43 @@ import java.util.List;
     @Service
     public class CommonServiceImpl implements CommonService {
 
-        @Autowired
-        AccountMapper accountMapper;
+    @Autowired
+    AccountMapper accountMapper;
 
-        @Autowired
-        JwtToken jwtToken;
+    @Autowired
+    JwtToken jwtToken;
 
-        @Autowired
-        StudentInfoMapper studentInfoMapper;
+    @Autowired
+    StudentInfoMapper studentInfoMapper;
 
-        @Autowired
-        CourseInfoMapper courseInfoMapper;
+    @Autowired
+    CourseInfoMapper courseInfoMapper;
 
-        @Autowired
-        ScoreMapper scoreMapper;
+    @Autowired
+    ScoreMapper scoreMapper;
 
-        @Autowired
-        TeacherInfoMapper teacherInfoMapper;
+    @Autowired
+    TeacherInfoMapper teacherInfoMapper;
 
-        @Override
-        public String login(String usename, String password) {
-            QueryWrapper<Account> wrapper = new QueryWrapper<>();
-            wrapper.eq("username", usename);
-            Account account = accountMapper.selectOne(wrapper);
-            if(account == null){
-                // 没查到这个用户名
-                return "0";
-            }
-            if(account.getPassword().equals(password)){
-                return jwtToken.jwt(account);
-            }
-            else
-                // 密码错误
-                return "1";
+    @Override
+    public String login(String usename, String password) {
+        QueryWrapper<Account> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", usename);
+        Account account = accountMapper.selectOne(wrapper);
+        if (account == null) {
+            // 没查到这个用户名
+            return "0";
         }
+        if (account.getPassword().equals(password)) {
+            return jwtToken.jwt(account);
+        } else
+            // 密码错误
+            return "1";
+    }
 
     /**
      * 整体传学生信息
+     *
      * @param address
      * @return
      * @throws IOException
@@ -81,18 +81,18 @@ import java.util.List;
         int rowTotalCount = sheet.getLastRowNum();
         XSSFRow rowAll = sheet.getRow(0);
         int columnTotalCount = rowAll.getLastCellNum();
-        for (int i=1; i<=rowTotalCount; i++){
+        for (int i = 1; i <= rowTotalCount; i++) {
             StudentInfo studentInfo = new StudentInfo();
             Account account = new Account();
             account.setRole(2);
-            for (int j=0; j<=columnTotalCount; j++){
-                switch (j){
+            for (int j = 0; j <= columnTotalCount; j++) {
+                switch (j) {
                     case 0:
                         XSSFRow row0 = sheet.getRow(i);
                         row0.getCell(j).setCellType(CellType.STRING);
                         Cell cell0 = row0.getCell(j);
                         account.setUsername(cell0.getStringCellValue());
-                        account.setPassword(cell0.getStringCellValue().substring(3,9));
+                        account.setPassword(cell0.getStringCellValue().substring(3, 9));
                         studentInfo.setStudentId(cell0.getStringCellValue());
                     case 1:
                         XSSFRow row1 = sheet.getRow(i);
@@ -117,6 +117,7 @@ import java.util.List;
 
     /**
      * 上传课程信息
+     *
      * @param address
      * @return Integer
      * @throws IOException
@@ -130,10 +131,10 @@ import java.util.List;
         int rowTotalCount = sheet.getLastRowNum();
         XSSFRow rowAll = sheet.getRow(0);
         int columnTotalCount = rowAll.getLastCellNum();
-        for (int i=1; i<=rowTotalCount; i++){
+        for (int i = 1; i <= rowTotalCount; i++) {
             CourseInfo courseInfo = new CourseInfo();
-            for(int j=0; j<=columnTotalCount; j++){
-                switch (j){
+            for (int j = 0; j <= columnTotalCount; j++) {
+                switch (j) {
                     case 0:
                         XSSFRow row0 = sheet.getRow(i);
                         row0.getCell(j).setCellType(CellType.STRING);
@@ -163,7 +164,7 @@ import java.util.List;
                         XSSFRow row5 = sheet.getRow(i);
                         row5.getCell(j).setCellType(CellType.NUMERIC);
                         Cell cell5 = row5.getCell(j);
-                        courseInfo.setTerm((int)cell5.getNumericCellValue());
+                        courseInfo.setTerm((int) cell5.getNumericCellValue());
                 }
             }
             judge = courseInfoMapper.insert(courseInfo);
@@ -173,6 +174,7 @@ import java.util.List;
 
     /**
      * 批量导入老师信息
+     *
      * @param address
      * @return
      * @throws IOException
@@ -186,33 +188,33 @@ import java.util.List;
         int rowTotalCount = sheet.getLastRowNum();
         XSSFRow rowAll = sheet.getRow(0);
         int columnTotalCount = rowAll.getLastCellNum();
-        for (int i=1; i<=rowTotalCount; i++){
+        for (int i = 1; i <= rowTotalCount; i++) {
             TeacherInfo teacherInfo = new TeacherInfo();
             Account account = new Account();
             account.setRole(2);
-            for (int j=0; j<=columnTotalCount; j++){
-                switch (j){
+            for (int j = 0; j <= columnTotalCount; j++) {
+                switch (j) {
                     case 0:
                         XSSFRow row0 = sheet.getRow(i);
                         row0.getCell(j).setCellType(CellType.STRING);
                         Cell cell0 = row0.getCell(j);
                         account.setUsername(cell0.getStringCellValue());
-                        account.setPassword(cell0.getStringCellValue().substring(3,9));
+                        account.setPassword(cell0.getStringCellValue().substring(1, 7));
                         teacherInfo.setTeacherId(cell0.getStringCellValue());
                     case 1:
                         XSSFRow row1 = sheet.getRow(i);
                         row1.getCell(j).setCellType(CellType.STRING);
                         Cell cell1 = row1.getCell(j);
                         teacherInfo.setTeacherName(cell1.getStringCellValue());
-            }
+                }
 
-            // 插入学生
-            // 插入用户
-            judge = teacherInfoMapper.insert(teacherInfo);
-            accountMapper.insert(account);
+                // 插入学生
+                // 插入用户
+                judge = teacherInfoMapper.insert(teacherInfo);
+                accountMapper.insert(account);
+            }
         }
         return judge;
     }
-
-
 }
+
