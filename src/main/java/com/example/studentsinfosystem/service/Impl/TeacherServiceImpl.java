@@ -7,7 +7,9 @@ import com.example.studentsinfosystem.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -105,10 +107,16 @@ public class TeacherServiceImpl implements TeacherService {
      * @return List<CourseInfo>
      */
     @Override
-    public List<CourseInfo> getCourse(String username) {
+    public Set getCourse(String username) {
         QueryWrapper<CourseInfo> wrapper = new QueryWrapper<>();
-        wrapper.eq("teacher_id", username);
-        return courseInfoMapper.selectList(wrapper);
+        wrapper.eq("teacher_id",username);
+
+        HashSet<String> set = new HashSet<>();
+        List<CourseInfo> courseInfos =  courseInfoMapper.selectList(wrapper);
+        for(CourseInfo i: courseInfos){
+            set.add(i.getCourseName());
+        }
+        return set;
     }
 
     @Override
