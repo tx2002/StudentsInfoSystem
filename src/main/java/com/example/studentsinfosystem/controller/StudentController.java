@@ -8,6 +8,11 @@ import com.example.studentsinfosystem.entity.StudentInfo;
 import com.example.studentsinfosystem.service.StudentService;
 import com.example.studentsinfosystem.utils.JwtToken;
 import io.jsonwebtoken.Claims;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.UploadObjectArgs;
+import io.minio.errors.MinioException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -16,8 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -26,6 +35,7 @@ import java.util.Set;
 
 /**
  * 学生功能相关的接口
+ *
  * @author TX
  * @date 2022/10/8 8:55
  */
@@ -40,14 +50,15 @@ public class StudentController {
 
     /**
      * 学生查询自己个人信息
+     *
      * @param token
      * @return
      */
     @GetMapping("/getinfo")
-    public CommonResult getinfo(@RequestHeader String token){
+    public CommonResult getinfo(@RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(1) || claims.get("role").equals(2)){
+        if (claims.get("role").equals(1) || claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             StudentInfo getinfo = studentService.getinfo(studentId);
             if (getinfo != null) {
@@ -62,6 +73,7 @@ public class StudentController {
 
     /**
      * 学生查询自己的全部课程
+     *
      * @param token
      * @return
      */
@@ -69,7 +81,7 @@ public class StudentController {
     public CommonResult getCourse(@RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(2)){
+        if (claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             List<CourseInfo> list = studentService.getCourse(studentId);
             if (!list.isEmpty()) {
@@ -84,7 +96,8 @@ public class StudentController {
 
     /**
      * 学生查询成绩单
-     * @param term 学期数
+     *
+     * @param term  学期数
      * @param token
      * @return
      */
@@ -92,7 +105,7 @@ public class StudentController {
     public CommonResult report(@RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(2)){
+        if (claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             List<Score> list = studentService.report(studentId, term);
             if (!list.isEmpty()) {
@@ -107,7 +120,8 @@ public class StudentController {
 
     /**
      * 查询学生可选课的列表
-     * @param term 学期数
+     *
+     * @param term  学期数
      * @param token
      * @return
      */
@@ -115,7 +129,7 @@ public class StudentController {
     public CommonResult chooseCourseList(@RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(2)){
+        if (claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             // 根据学号查询学生班级
             String className = studentService.getClassNameById(studentId);
@@ -147,6 +161,7 @@ public class StudentController {
 
     /**
      * 学生新增选课
+     *
      * @param courseName
      * @param term
      * @param token
@@ -156,7 +171,7 @@ public class StudentController {
     public CommonResult addCourse(@RequestParam String courseName, @RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(2)){
+        if (claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             // 根据学号查询学生班级
             String className = studentService.getClassNameById(studentId);
@@ -201,6 +216,7 @@ public class StudentController {
 
     /**
      * 学生退选课
+     *
      * @param courseName
      * @param token
      * @return
@@ -209,7 +225,7 @@ public class StudentController {
     public CommonResult deleteCourse(@RequestParam String courseName, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(2)){
+        if (claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             // 在课程信息表中删除
             int delete = studentService.deleteCourse(studentId, courseName);
@@ -228,6 +244,7 @@ public class StudentController {
 
     /**
      * 修改密码
+     *
      * @param oldPassword
      * @param newPassword
      * @param token
@@ -237,7 +254,7 @@ public class StudentController {
     public CommonResult changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(0) || claims.get("role").equals(1) || claims.get("role").equals(2)){
+        if (claims.get("role").equals(0) || claims.get("role").equals(1) || claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             String res = studentService.changePassword(studentId, oldPassword, newPassword);
             if (res.equals("修改密码成功！")) {
@@ -252,13 +269,12 @@ public class StudentController {
 
     /**
      * 下载选课信息
-     * @param response
      * @param term
      * @param token
      * @return
      */
     @GetMapping("/outChooseCourse")
-    public CommonResult outChooseCourse(HttpServletResponse response, @RequestParam Integer term, @RequestHeader String token) {
+    public CommonResult outChooseCourse(@RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
         if(claims.get("role").equals(2)){
@@ -322,23 +338,39 @@ public class StudentController {
                     row1.createCell(4).setCellValue(i.getClassName());
                     rowNum++;
                 }
-                //描述内容在传输过程中的编码格式，BINARY可能不止包含非ASCII字符，还可能不是一个短行（超过1000字符）。
-                response.setHeader("Content-Transfer-Encoding", "binary");
-                //must-revalidate：强制页面不缓存，post-check=0, pre-check=0：0秒后，在显示给用户之前，该对象被选中进行更新过
-                response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-                //表示响应可能是任何缓存的，即使它只是通常是非缓存或可缓存的仅在非共享缓存中。
-                response.setHeader("Pragma", "public");
-                //告诉浏览器这个文件的名字和类型，attachment：作为附件下载；inline：直接打开
-                response.setHeader("Content-Disposition", String.format("attachment;filename=\"%s\"", fileName));
-
                 try {
-                    OutputStream os = response.getOutputStream();
+                    OutputStream os = new FileOutputStream(fileName);
                     workbook.write(os);
                     os.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return CommonResult.success("下载成功");
+                // Minio
+                try {
+                    MinioClient minioClient =
+                            MinioClient.builder()
+                                    .endpoint("http://1.117.115.133:9000")
+                                    .credentials("7bhUZhY8i0RBpiGU", "KlPntiSmUQylYvmlsYatnVOAV64icHW4")
+                                    .build();
+                    boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("student").build());
+                    if (!found) {
+                        minioClient.makeBucket(MakeBucketArgs.builder().bucket("student").build());
+                    } else {
+                        System.out.println("Bucket 'student' already exists.");
+                    }
+
+                    minioClient.uploadObject(
+                            UploadObjectArgs.builder()
+                                    .bucket("student")
+                                    .object(fileName)
+                                    .filename("/home/android/" + fileName)
+                                    .build());
+
+                } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                    System.out.println("Error occurred: " + e);
+                    System.out.println("上传失败");
+                }
+                return CommonResult.success("http://1.117.115.133:9000/student/" + fileName);
             } else {
                 return CommonResult.failed("无选课信息");
             }
@@ -349,12 +381,11 @@ public class StudentController {
 
     /**
      * 下载课程信息
-     * @param response
      * @param token
      * @return
      */
     @GetMapping("/outCourseInfo")
-    public CommonResult outCourseInfo(HttpServletResponse response, @RequestHeader String token) {
+    public CommonResult outCourseInfo(@RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
         if(claims.get("role").equals(2)){
@@ -404,23 +435,41 @@ public class StudentController {
                     row1.createCell(5).setCellValue(i.getTerm());
                     rowNum++;
                 }
-                //描述内容在传输过程中的编码格式，BINARY可能不止包含非ASCII字符，还可能不是一个短行（超过1000字符）。
-                response.setHeader("Content-Transfer-Encoding", "binary");
-                //must-revalidate：强制页面不缓存，post-check=0, pre-check=0：0秒后，在显示给用户之前，该对象被选中进行更新过
-                response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-                //表示响应可能是任何缓存的，即使它只是通常是非缓存或可缓存的仅在非共享缓存中。
-                response.setHeader("Pragma", "public");
-                //告诉浏览器这个文件的名字和类型，attachment：作为附件下载；inline：直接打开
-                response.setHeader("Content-Disposition", String.format("attachment;filename=\"%s\"", fileName));
 
                 try {
-                    OutputStream os = response.getOutputStream();
+                    OutputStream os = new FileOutputStream(fileName);
                     workbook.write(os);
                     os.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return CommonResult.success("下载成功");
+
+                // Minio
+                try {
+                    MinioClient minioClient =
+                            MinioClient.builder()
+                                    .endpoint("http://1.117.115.133:9000")
+                                    .credentials("7bhUZhY8i0RBpiGU", "KlPntiSmUQylYvmlsYatnVOAV64icHW4")
+                                    .build();
+                    boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("student").build());
+                    if (!found) {
+                        minioClient.makeBucket(MakeBucketArgs.builder().bucket("student").build());
+                    } else {
+                        System.out.println("Bucket 'student' already exists.");
+                    }
+
+                    minioClient.uploadObject(
+                            UploadObjectArgs.builder()
+                                    .bucket("student")
+                                    .object(fileName)
+                                    .filename("/home/android/" + fileName)
+                                    .build());
+
+                } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                    System.out.println("Error occurred: " + e);
+                    System.out.println("上传失败");
+                }
+                return CommonResult.success("http://1.117.115.133:9000/student/" + fileName);
             } else {
                 return CommonResult.failed("无课程信息");
             }
@@ -429,11 +478,17 @@ public class StudentController {
         }
     }
 
+    /**
+     * 下载成绩单
+     * @param term
+     * @param token
+     * @return
+     */
     @GetMapping("/outReport")
-    public CommonResult outReport(HttpServletResponse response, @RequestParam Integer term, @RequestHeader String token) {
+    public CommonResult outReport(@RequestParam Integer term, @RequestHeader String token) {
         Claims claims = jwtToken.getClaimByToken(token);
         // 权限判断
-        if(claims.get("role").equals(2)){
+        if (claims.get("role").equals(2)) {
             String studentId = (String) claims.get("username");
             List<Score> list = studentService.report(studentId, term);
             if (!list.isEmpty()) {
@@ -467,10 +522,10 @@ public class StudentController {
                 Date now = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                 String time = format.format(now);
-                String fileName = studentId+"-"+time+".xlsx";
+                String fileName = studentId + "-" + time + ".xlsx";
 
                 int rowNum = 1;
-                for(Score i : list){
+                for (Score i : list) {
                     XSSFRow row1 = sheet.createRow(rowNum);
                     row1.createCell(0).setCellValue(i.getStudentId());
                     row1.createCell(1).setCellValue(i.getStudentName());
@@ -484,23 +539,41 @@ public class StudentController {
                     }
                     rowNum++;
                 }
-                //描述内容在传输过程中的编码格式，BINARY可能不止包含非ASCII字符，还可能不是一个短行（超过1000字符）。
-                response.setHeader("Content-Transfer-Encoding", "binary");
-                //must-revalidate：强制页面不缓存，post-check=0, pre-check=0：0秒后，在显示给用户之前，该对象被选中进行更新过
-                response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-                //表示响应可能是任何缓存的，即使它只是通常是非缓存或可缓存的仅在非共享缓存中。
-                response.setHeader("Pragma", "public");
-                //告诉浏览器这个文件的名字和类型，attachment：作为附件下载；inline：直接打开
-                response.setHeader("Content-Disposition", String.format("attachment;filename=\"%s\"", fileName));
 
                 try {
-                    OutputStream os = response.getOutputStream();
+                    OutputStream os = new FileOutputStream(fileName);
                     workbook.write(os);
                     os.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return CommonResult.success("下载成功");
+
+                // Minio
+                try {
+                    MinioClient minioClient =
+                            MinioClient.builder()
+                                    .endpoint("http://1.117.115.133:9000")
+                                    .credentials("7bhUZhY8i0RBpiGU", "KlPntiSmUQylYvmlsYatnVOAV64icHW4")
+                                    .build();
+                    boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("student").build());
+                    if (!found) {
+                        minioClient.makeBucket(MakeBucketArgs.builder().bucket("student").build());
+                    } else {
+                        System.out.println("Bucket 'student' already exists.");
+                    }
+
+                    minioClient.uploadObject(
+                            UploadObjectArgs.builder()
+                                    .bucket("student")
+                                    .object(fileName)
+                                    .filename("/home/android/" + fileName)
+                                    .build());
+
+                } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
+                    System.out.println("Error occurred: " + e);
+                    System.out.println("上传失败");
+                }
+                return CommonResult.success("http://1.117.115.133:9000/student/" + fileName);
             } else {
                 return CommonResult.failed("无成绩信息");
             }
