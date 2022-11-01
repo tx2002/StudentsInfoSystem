@@ -7,7 +7,6 @@ import com.example.studentsinfosystem.mapper.*;
 import com.example.studentsinfosystem.service.CommonService;
 import com.example.studentsinfosystem.utils.JwtToken;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,12 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 /**
      *
@@ -92,7 +86,7 @@ import java.util.List;
                         row0.getCell(j).setCellType(CellType.STRING);
                         Cell cell0 = row0.getCell(j);
                         account.setUsername(cell0.getStringCellValue());
-                        account.setPassword(cell0.getStringCellValue().substring(3, 9));
+                        account.setPassword(cell0.getStringCellValue());
                         studentInfo.setStudentId(cell0.getStringCellValue());
                     case 1:
                         XSSFRow row1 = sheet.getRow(i);
