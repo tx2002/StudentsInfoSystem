@@ -87,10 +87,8 @@ public class CommonController {
      * @throws Exception
      */
     @PostMapping("/inputstudentinfo")
-    public CommonResult inputStudentInfo(@RequestHeader String token,
-                                         @RequestBody MultipartFile file) throws Exception {
-        Claims claims = jwtToken.getClaimByToken(token);
-        if(claims.get("role").equals(0)){
+    public CommonResult inputStudentInfo(@RequestBody MultipartFile file) throws Exception {
+
             File files = MultipartFileToFile.multipartFileToFile(file);
             String address = files.getAbsolutePath();
             int judge = commonService.inputStudentInfo(address);
@@ -98,9 +96,6 @@ public class CommonController {
                 return CommonResult.success("导入成功");
             else
                 return CommonResult.failed("导入失败");
-        }
-        else
-            return CommonResult.failed("无权限");
     }
 
     /**
@@ -111,10 +106,8 @@ public class CommonController {
      * @throws Exception
      */
     @PostMapping("/inputcourseinfo")
-    public CommonResult inputCoursseInfo(@RequestHeader String token,
-                                         @RequestBody MultipartFile file) throws Exception {
-        Claims claims = jwtToken.getClaimByToken(token);
-        if (claims.get("role").equals(0)) {
+    public CommonResult inputCoursseInfo(@RequestBody MultipartFile file) throws Exception {
+
             File files = MultipartFileToFile.multipartFileToFile(file);
             String address = files.getAbsolutePath();
             int judge = commonService.inputCourseInfo(address);
@@ -122,15 +115,10 @@ public class CommonController {
                 return CommonResult.success("导入成功");
             else
                 return CommonResult.failed("导入失败");
-        } else
-            return CommonResult.failed("无权限");
     }
 
     @PostMapping("/inputteacherinfo")
-    public CommonResult inputTeacherInfo(@RequestHeader String token,
-                                         @RequestBody MultipartFile file) throws Exception{
-        Claims claims = jwtToken.getClaimByToken(token);
-        if(claims.get("role").equals(0)){
+    public CommonResult inputTeacherInfo(@RequestBody MultipartFile file) throws Exception{
             File files = MultipartFileToFile.multipartFileToFile(file);
             String address = files.getAbsolutePath();
             int judge = commonService.inputTeacherInfo(address);
@@ -138,8 +126,6 @@ public class CommonController {
                 return CommonResult.success("导入成功");
             else
                 return CommonResult.failed("导入失败");
-        } else
-            return CommonResult.failed("无权限");
     }
 
     /**
