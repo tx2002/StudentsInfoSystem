@@ -199,7 +199,7 @@ import java.util.List;
                         row0.getCell(j).setCellType(CellType.STRING);
                         Cell cell0 = row0.getCell(j);
                         account.setUsername(cell0.getStringCellValue());
-                        account.setPassword(cell0.getStringCellValue().substring(1, 7));
+                        account.setPassword(cell0.getStringCellValue());
                         teacherInfo.setTeacherId(cell0.getStringCellValue());
                     case 1:
                         XSSFRow row1 = sheet.getRow(i);
